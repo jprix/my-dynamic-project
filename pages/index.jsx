@@ -1,6 +1,5 @@
 'use client';
 
-import { DynamicWidget } from "@/lib/dynamic";
 import { useState, useEffect } from 'react';
 import { useIsLoggedIn, useDynamicContext, useSocialAccounts } from '@dynamic-labs/sdk-react-core';
 import { ProviderEnum } from '@dynamic-labs/types';
@@ -11,13 +10,19 @@ export default function Main() {
   );
 
   const isLoggedIn = useIsLoggedIn();
-  const { user, setShowAuthFlow } = useDynamicContext();
+  const { user, setShowAuthFlow,handleLogOut } = useDynamicContext();
   const { isLinked } = useSocialAccounts();
 
+  console.log('User:', user, 'isLOggedIn:', isLoggedIn);  
   const handleLoginClick = () => {
     console.log('Login clicked');
     setShowAuthFlow(true);
   };
+
+  const handleLogoutClick = () => {
+    handleLogOut();
+    localStorage.clear();
+};
 
   useEffect(() => {
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -29,11 +34,17 @@ export default function Main() {
 
   return (
     <div className={`modal ${isDarkMode ? 'dark' : ''}`}>
-      {!isLoggedIn ? (
-        <button onClick={handleLoginClick}>Login</button>
+      {isLoggedIn ? (
+         <>      
+         <p>{user?.verifiedCredentials?.[1]?.oauthDisplayName || 'No OAuth Display Name'}</p>
+          <p>{user?.verifiedCredentials?.[1]?.email || 'No Email'}</p>
+       <button onClick={handleLogoutClick}>Logout</button>
+       </>
       ) : (
-        <p>{user?.verifiedCredentials?.[1]?.oauthDisplayName || 'No OAuth Display Name'}</p>
+        <button onClick={handleLoginClick}>Login</button>
       )}
+   
+
     </div>
   );
 }
