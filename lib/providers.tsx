@@ -15,7 +15,7 @@ export default function Providers({
     <DynamicContextProvider
       theme="auto"
       settings={{
-        environmentId: "1cccdcf8-788c-461e-8d26-f2865d520018",
+        environmentId: "",
            walletConnectors: [],
       }}
     >
